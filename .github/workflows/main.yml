@@ -1,0 +1,38 @@
+name: Deploy React App
+
+on:
+  workflow_dispatch:  # Đây là trigger thủ công
+    inputs:
+      environment:
+        description: 'staging'
+        required: true
+        default: 'staging'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Build React app
+      run: npm run build
+    
+    - name: Deploy to server
+      run: |
+        if [ "${{ github.event.inputs.environment }}" == "production" ]; then
+          echo "Deploying to Production Server..."
+          # Lệnh deploy lên production (sử dụng SCP, SSH, hoặc API để deploy)
+        else
+          echo "Deploying to Staging Server..."
+          # Lệnh deploy lên staging (sử dụng SCP, SSH, hoặc API để deploy)
+        fi
